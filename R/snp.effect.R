@@ -16,16 +16,20 @@
 #' $interaction_effects a envNum * snpNum matrix for interaction SNP effect
 #'
 #' @export
+#' @importFrom stats rnorm
 #'
-#' @examples snp.effect(snpNum = 1000, envNum = 3,
+#' @examples snp.effect(snpNum = 2000, envNum = 3,
 #'                      major_a_idx = c(500, 750, 1000, 1250, 1500),
 #'                      major_ae_idx = c(250, 500, 1000, 1500, 1750),
-#'                      variance_a_major = 0.02,  variance_ae_major = 0.002,
-#'                      variance_a_minor = 0.01,  variance_ae_minor = 0.001,
-#'                      )
+#'                      variance_a_major = 0.02,  variance_ae_major = 0.01,
+#'                      variance_a_minor = 0.002,  variance_ae_minor = 0.001)
 snp.effect <- function(snpNum, envNum, major_a_idx, major_ae_idx,
                        variance_a_major, variance_ae_major,
                        variance_a_minor, variance_ae_minor) {
+
+  if(max(major_a_idx)>snpNum | max(major_ae_idx)>snpNum) {
+    stop("Error: snp.effect(). The input major_a_idx or major_ae_idx is out of the snpNum range.")
+  }
 
   # determine minor index
   minor_a_idx = setdiff(1:snpNum, major_a_idx)

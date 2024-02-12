@@ -1,33 +1,20 @@
-source("/public3/zqx/GS-GE/GS-GE-function.R")
-library(ggplot2)
-library(egg)
-library(dplyr)
-# nohup Rscript GS-GE-data-generate.R 0.5 0.5 0.6 0.3 > 55-63.log 2>&1 &
+install.packages("/Users/zqx/ZJU-PhD/2-Work/Rpackage/mmGEBLUP_0.1.0.tar.gz", repos = NULL, type = "source")
 
-set.seed(123321)
-
-# arg = commandArgs(T)
-# rho_a = as.numeric(arg[1])
-# rho_ae = as.numeric(arg[2])
-# h2_a = as.numeric(arg[3])
-# h2_ae = as.numeric(arg[4])
-rho_a = 0.5
-rho_ae = 0.5
-h2_a = 0.3
-h2_ae = 0.3
-
-filePrefix = paste0("Simulated-GE-h2a-",h2_a*10,"-h2ae-",h2_ae*10,"-rhoa-",rho_a*10,"-rhoae-",rho_ae*10)
+library(mmGEBLUP)
 
 # Parameter setting ------------------------------
-alpha = 0.05
-cvNum = 4
-repNum = 1
-
-
+# repNum = 1
 envNum = 3
 pheNum = 5
 indNum = 1000
 snpNum = 2000
+rho_a = 0.5
+rho_ae = 0.5
+h2_a = 0.3
+h2_ae = 0.3
+sigma_a = h2_a
+sigma_ae = h2_ae
+sigma_error = 1-h2_a-h2_ae
 
 major_a_idx = c(500, 750, 1000, 1250, 1500)
 snpNum_a_major = length(major_a_idx)
@@ -37,25 +24,24 @@ major_ae_idx = c(250, 500, 1000, 1500, 1750)
 snpNum_ae_major = length(major_ae_idx)
 snpNum_ae_minor = snpNum-snpNum_ae_major
 
-# varP = 1
-sigma_a = h2_a
-sigma_ae = h2_ae
-sigma_error = 1-h2_a-h2_ae
 sigma_a_major = rho_a * sigma_a/ snpNum_a_major
 sigma_a_minor = (1-rho_a) * sigma_a / snpNum_a_minor
 sigma_ae_major = rho_ae * sigma_ae/ snpNum_ae_major
 sigma_ae_minor = (1-rho_ae) * sigma_ae / snpNum_ae_minor
 
-
+# Effect generation --------------------------------------------------------
 eff_list = snp.effect(snpNum = snpNum, envNum = envNum,
                       major_a_idx = major_a_idx, major_ae_idx = major_ae_idx,
                       variance_a_major = sigma_a_major , variance_a_minor = sigma_a_minor,
                       variance_ae_major = sigma_ae_major, variance_ae_minor = sigma_ae_minor)
 b0 = eff_list$main_effects
 bh = eff_list$interact_effects
-b = eff_list$eff
+b = eff_list$effects
 
-# Genotype generation ----------------------------
+p = snp.effect.plot(effects = b)
+p
+
+# Genotype generation --------------------------------------------------------
 Ga = matrix(NA, indNum, snpNum)
 freq = runif(snpNum, 0.05, 0.5)
 for(j in 1:snpNum)
@@ -78,25 +64,8 @@ pheno_data = data.frame(ENV = as.factor(rep(paste0("env",1:envNum), each=indNum)
                         GID = as.factor(rep(rownames(Ga), envNum)))
 for(p in 1:pheNum)
 {
-  ## generate effect
-  eff_list = snp.effect(snpNum = snpNum, envNum = envNum,
-                        major_a_idx = major_a_idx, major_ae_idx = major_ae_idx,
-                        variance_a_major = sigma_a_major , variance_a_minor = sigma_a_minor,
-                        variance_ae_major = sigma_ae_major, variance_ae_minor = sigma_ae_minor)
-
-  b0 = eff_list$main_effects
-  bh = eff_list$interact_effects
-
-  b = b0[rep(1,envNum),] + bh
-
-  # print(var(tcrossprod(Ga[,major_idx], t(as.matrix(b0[major_idx])))))
-  # print(diag(var(tcrossprod(Ga[,major_idx], b[,major_idx]))))
-
-  ## generate phenotype
   g = tcrossprod(Ga, b)
   g = as.vector(g)
-
-
   error = rnorm(indNum*envNum, mean = 0, sd = sqrt(sigma_error))
   pheno_data = cbind(pheno_data, g + error)
   qtl = rbind(qtl, data.frame(TRAIT = paste0("TRAIT",p),

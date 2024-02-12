@@ -6,6 +6,8 @@ Author: Qixin Zhang
 Maintainer: Qixin <qixin0909@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
+Imports:
+    ggplot2
 License: GPL (>=3)
 Encoding: UTF-8
 LazyData: true
