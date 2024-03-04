@@ -10,7 +10,6 @@ library(mmGEBLUP)
 
 #### Data simulation -----------------------------------------------------------
 # Parameter setting
-# repNum = 1
 envNum = 3
 indNum = 1000
 snpNum = 2000

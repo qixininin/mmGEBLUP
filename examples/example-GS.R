@@ -1,6 +1,5 @@
 # Load packages ----------------------------------------------------------------
 library(mmGEBLUP)
-library(sommer)
 library(dplyr)
 
 # Load data --------------------------------------------------------------------
@@ -51,7 +50,7 @@ for(i in 1:cvNum) # loop for cross validation fold
     dplyr::summarise(cor(obs,pre,use="pairwise.complete.obs")) %>%
     as.numeric()
 
-  mmgeblup_list[[a]] = data.frame(TRAIT = trait, CV = i, COR = cor, R2 = cor^2)
+  mmgeblup_list[[a]] = data.frame(TRAIT = mmdata$mmsummary$traitName, CV = i, COR = cor, R2 = cor^2)
   mmgeblup_bv_list[[a]] = BV %>% dplyr::filter(GID %in% cv) %>% dplyr::filter(ENV %in% validEnv)
 
   print(a)
@@ -62,4 +61,4 @@ rstmmGEBLUP <- dplyr::bind_rows(mmgeblup_list)
 
 print("NOTE: mmGEBLUP DONE")
 
-save(rstmmGEBLUP, file = paste0(prefix,"-rep", rep, "-rst.Rdata"))
+save(rstmmGEBLUP, file = "./inst/Simulation-GSresult.Rdata")
