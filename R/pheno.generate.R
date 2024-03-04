@@ -33,5 +33,8 @@ pheno.generate <- function(genotypes, effects, envNum, indNum, sigma.error){
 
   colnames(pheno_data) = c("ENV","GID","SimTrait")
 
+  pheno_data$ENV = as.factor(pheno_data$ENV)
+  pheno_data$GID = as.factor(pheno_data$GID)
+
   return(pheno_data)
 }
