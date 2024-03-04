@@ -2,7 +2,7 @@
 
 mmGEBLUP: A systematic simulation program and a novel genomic prediction strategy based on integrated evaluation of major and minor gene and gene-by-environment effects    
 
-In our package, we offer **Three** key functions in the field of quantatative genetics including **Genotype-by-Environment (GE)** interaction.   
+In our package, we offer **Three** key functions in the field of quantitative genetics including **Genotype-by-Environment (GE)** interaction.   
 - Trait simulation    
 - GWAS analysis    
 - Genomic prediction (a novel model named mmGEBLUP)     
@@ -22,6 +22,12 @@ library(mmGEBLUP)
 Correspondingly, we offer **Three** examples as an illustration.    
 
 ## Example 1 Trait simulation 
+This example simulate 1000 (indNum) individual genotypes with 2000 (snpNum) independent markers and their phenotypes with specified genetic architecture and extended GE interaction structure in 3 (envNum) environments.    
+The trait simulation can be specified through several parameters:    
+- $h^2_A$: General heritability   
+- $h^2_{AE}$: Interaction heritability    
+- $\rho_A$: General polygenicity (or the proportion of genetic variance explained by the large-effect term)   
+- $\rho_{AE}$: Interaction polygenicity (or the proportion of interaction variance explained by the large-interaction-effect term)   
 
 ```
 # Load packages 
@@ -40,14 +46,17 @@ sigma_a = h2_a
 sigma_ae = h2_ae
 sigma_error = 1-h2_a-h2_ae
 
+# Define large additive effect markers
 major_a_idx = c(500, 750, 1000, 1250, 1500)
 snpNum_a_major = length(major_a_idx)
 snpNum_a_minor = snpNum-snpNum_a_major
 
+# Define large interaction effect markers
 major_ae_idx = c(250, 500, 1000, 1500, 1750)
 snpNum_ae_major = length(major_ae_idx)
 snpNum_ae_minor = snpNum-snpNum_ae_major
 
+# Transform to marker effect variance
 sigma_a_major = rho_a * sigma_a/ snpNum_a_major
 sigma_a_minor = (1-rho_a) * sigma_a / snpNum_a_minor
 sigma_ae_major = rho_ae * sigma_ae/ snpNum_ae_major
@@ -59,7 +68,7 @@ eff_list = snp.effect(snpNum = snpNum, envNum = envNum,
                       variance_a_major = sigma_a_major , variance_a_minor = sigma_a_minor,
                       variance_ae_major = sigma_ae_major, variance_ae_minor = sigma_ae_minor)
 b = eff_list$effects
-# Plot phenotypes
+# Plot marker effects
 p = snp.effect.plot(effects = b)
 
 # Genotype generation
@@ -75,6 +84,11 @@ save(geno_data, pheno_data, file = "./inst/Simulation-genphe.Rdata")
 
 
 ## Example 2 GWAS analysis
+This example file is to perform QTS analysis using QTXNetwork [https://github.com/Zhutn/QTXNetwork_4.0] based on genotype and phenotype data  
+1. If you have already obtained QTS results, you can skip this example.  
+2. If you have generated the simulation data by following the 'example-SIMULATION.R', you can load 'Simulation-genphe.Rdata' directly.  
+3. If you want to input your own data for 'QTXnetwork' from R, this example can also help you perpare QTXnetwork-formated files (.gen/.phe)  
+
 ```
 # Load packages 
 library(mmGEBLUP)
@@ -111,6 +125,7 @@ save(qtl_data, qtl_env_data, file = "./inst/Simulation-qtl.Rdata")
 
 
 ## Exmaple 3 Genomic prediction (a novel model named mmGEBLUP)
+The main idea of this package is to perform genomic prediction with respect to the genetic architecture and extended GE interaction structure. In the following example, we perform 4-fold cross-validation on the simulation data, and output predicted phenotypes and the model prediction accuracy.  
 
 ```
 # Load packages 
