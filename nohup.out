@@ -14,4 +14,7 @@ install.packages('sommer') in a new session
  Use the 'dateWarning' argument to disable the warning message.[1] 1
 Version out of date. Please update sommer to the newest version using:
 install.packages('sommer') in a new session
+ Use the 'dateWarning' argument to disable the warning message.[1] 2
+Version out of date. Please update sommer to the newest version using:
+install.packages('sommer') in a new session
  Use the 'dateWarning' argument to disable the warning message.
