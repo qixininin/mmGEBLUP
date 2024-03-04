@@ -7,7 +7,9 @@ Maintainer: Qixin <qixin0909@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 Imports:
-    ggplot2
+    ggplot2,
+    sommer,
+    dplyr
 License: GPL (>=3)
 Encoding: UTF-8
 LazyData: true
