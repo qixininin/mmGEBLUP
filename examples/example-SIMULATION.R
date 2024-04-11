@@ -1,7 +1,7 @@
 #### Install package -----------------------------------------------------------
 ## Install from github
 library(devtools)
-install_github("qixininin/deepKin")
+install_github("qixininin/mmGEBLUP")
 ## Install from source files
 install.packages("/public3/zqx/mmGEBLUP_0.1.0.tar.gz", repos = NULL, type = "source")
 
