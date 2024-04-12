@@ -16,7 +16,7 @@ indNum = 100
 snpNum = 200
 rho_a = 0.5
 rho_ae = 0.5
-h2_a = 0.6
+h2_a = 0.3
 h2_ae = 0.3
 sigma_a = h2_a
 sigma_ae = h2_ae
@@ -53,3 +53,4 @@ pheno_data = pheno.generate(genotypes = t(geno_data[-c(1:3)]), effects = b,
                             envNum = envNum, indNum = indNum, sigma.error = sigma_error)
 
 save(geno_data, pheno_data, file = "./inst/Pivot-genphe.Rdata")
+save(eff_list, major_a_idx, major_ae_idx, geno_data, pheno_data, file = "./inst/Pivot-effgenphe.Rdata")

@@ -10,7 +10,7 @@
 #' @return a list of EKae1 and EKae2
 #' @export
 #'
-#' @examples \dontrun{EKae = calculateEKae(mmgeno_data, A, E, EA, site_env_qtl_all, m_env_qtl)}
+#' @examples \dontrun{EKae = calculateEKae(geno_data = mmgeno_data, A, E, EA, site_env_qtl_all, m_env_qtl)}
 calculateEKae <- function(geno_data, A, E, EA, site_env_qtl_all, m_env_qtl)
 {
   EKae_l = EA
@@ -38,6 +38,20 @@ calculateEKae <- function(geno_data, A, E, EA, site_env_qtl_all, m_env_qtl)
         EKae_s[left:right,left:right] = A
       }
     }
+
+    ## TEST
+    site_qe = unique(site_env_qtl_all$QTL)
+    Xae = as.matrix(geno_data[, colnames(geno_data) %in% site_qe])
+    EKae_l = list()
+    for(t in 1:length(site_qe))
+    {
+      Ka = tcrossprod(Xae[,t])
+      colnames(Ka) = rownames(Ka) = names(Xae[,t])
+      EKae_l[[t]] = kronecker(Ka, E, make.dimnames = T)
+    }
+    EKae_l = as.list(EKae_l)
+    ## TEST END
+
     return(list(EKae1 = EKae_l,
                 EKae2 = EKae_s))
   } else {

@@ -26,5 +26,5 @@ a list of EKae1 and EKae2
 calculateEKae function
 }
 \examples{
-\dontrun{EKae = calculateEKae(mmgeno_data, A, E, EA, site_env_qtl_all, m_env_qtl)}
+\dontrun{EKae = calculateEKae(geno_data = mmgeno_data, A, E, EA, site_env_qtl_all, m_env_qtl)}
 }

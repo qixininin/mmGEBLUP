@@ -4,8 +4,8 @@ library(dplyr)
 set.seed(215)
 
 # Load data --------------------------------------------------------------------
-load("./inst/Simulation-genphe.Rdata")
-load("./inst/Simulation-qtl.Rdata")
+load("./inst/Pivot-genphe.Rdata")
+load("./inst/Pivot-qtl.Rdata")
 
 # geno_data[1:5,1:10]
 # pheno_data[1:5,]
@@ -64,4 +64,4 @@ for(i in 1:cvNum) # loop for cross validation fold
 rstmmGEBLUP <- dplyr::bind_rows(mmgeblup_list)
 rstBV <- dplyr::bind_rows(mmgeblup_bv_list)
 
-save(mmdata, rstmmGEBLUP, rstBV, cvSet, file = "./inst/Simulation-GSresult.Rdata")
+save(mmdata, rstmmGEBLUP, rstBV, cvSet, file = "./inst/Pivot-GSresult.Rdata")
