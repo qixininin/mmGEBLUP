@@ -26,7 +26,7 @@ pheno.generate <- function(genotypes, effects, envNum, indNum, sigma.error){
   pheno_data = data.frame(ENV = as.factor(rep(paste0("env",1:envNum), each=indNum)),
                           GID = as.factor(rep(rownames(genotypes), envNum)))
 
-  g = tcrossprod(genotypes, b)
+  g = tcrossprod(genotypes, effects)
   g = as.vector(g)
   error = rnorm(indNum*envNum, mean = 0, sd = sqrt(sigma.error))
   pheno_data = cbind(pheno_data, g + error)

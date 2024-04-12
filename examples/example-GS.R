@@ -1,6 +1,7 @@
 # Load packages ----------------------------------------------------------------
 library(mmGEBLUP)
 library(dplyr)
+set.seed(215)
 
 # Load data --------------------------------------------------------------------
 load("./inst/Simulation-genphe.Rdata")
@@ -24,7 +25,8 @@ mmpheno_data = mmdata$mmpheno_data
 trainEnv = c("env1","env2")
 validEnv = c("env3")
 cvNum = 4
-cvSet = matrix(sample(mmdata$mmsummary$lineName), nrow = cvNum)
+naNum = ifelse(length(mmdata$mmsummary$lineName)%%cvNum==0, 0, cvNum-length(mmdata$mmsummary$lineName)%%cvNum)
+cvSet = matrix(c(sample(mmdata$mmsummary$lineName), rep(NA, naNum)), nrow = cvNum)
 
 # mmGEBLUP ------------------------------------------------------
 a <- 0
@@ -35,7 +37,7 @@ for(i in 1:cvNum) # loop for cross validation fold
   a <- a + 1
 
   # set phenotype in validation set and in validation env to be NA
-  cv = unique(cvSet[i,])
+  cv = as.vector(na.omit(unique(cvSet[i,])))
   dt = mmpheno_data %>% dplyr::mutate(trait = ifelse(GID %in% cv & ENV %in% validEnv, NA, trait))
   dt = as.data.frame(dt)
 
@@ -51,14 +53,15 @@ for(i in 1:cvNum) # loop for cross validation fold
     as.numeric()
 
   mmgeblup_list[[a]] = data.frame(TRAIT = mmdata$mmsummary$traitName, CV = i, COR = cor, R2 = cor^2)
-  mmgeblup_bv_list[[a]] = BV %>% dplyr::filter(GID %in% cv) %>% dplyr::filter(ENV %in% validEnv)
+  mmgeblup_bv_list[[a]] = BV %>%
+    dplyr::mutate(obs = mmpheno_data$trait) %>%
+    dplyr::filter(GID %in% cv) %>%
+    dplyr::filter(ENV %in% validEnv)
 
   print(a)
 }
 
-
 rstmmGEBLUP <- dplyr::bind_rows(mmgeblup_list)
+rstBV <- dplyr::bind_rows(mmgeblup_bv_list)
 
-print("NOTE: mmGEBLUP DONE")
-
-save(rstmmGEBLUP, file = "./inst/Simulation-GSresult.Rdata")
+save(mmdata, rstmmGEBLUP, rstBV, cvSet, file = "./inst/Simulation-GSresult.Rdata")

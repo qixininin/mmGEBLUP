@@ -64,13 +64,15 @@ mmgeblup <- function(data, Ka, EKae1, EKae2)
                data = datafake,
                verbose = FALSE, date.warning = FALSE)
     ## Predict
-    mu = as.matrix(cbind(rep(1, nrow(data)), data[,as.vector(mod$Beta$Effect)[-1]])) %*% mod$Beta$Estimate
+    # mu = as.matrix(cbind(rep(1, nrow(data)), data[,as.vector(mod$Beta$Effect)[-1]])) %*% mod$Beta$Estimate
     BV = data.frame(data[,c("ENV","GID")])
-    BV$pre = mu +                                          # mu
-      mod$U$`u:GID`$trait[BV$GID]+                         # G
-      mod$U$`u:ENV`$trait[BV$ENV]+                         # E
-      mod$U$`u:ENV:GID`$trait[paste0(BV$ENV,":",BV$GID)]+  # GE-major
-      mod$U$`u:ENV:GID1`$trait[paste0(BV$ENV,":",BV$GID)]  # GE-minor
+    BV$mu = mod$Beta$Estimate[1]                                                                     # mu
+    BV$A_l = as.matrix(data[,as.vector(mod$Beta$Effect)[-1]]) %*% as.vector(mod$Beta$Estimate)[-1]   # G-major
+    BV$A_s = mod$U$`u:GID`$trait[BV$GID]                                                             # G-minor
+    BV$AE_l = mod$U$`u:ENV:GID`$trait[paste0(BV$ENV,":",BV$GID)]                                     # GE-major
+    BV$AE_s = mod$U$`u:ENV:GID1`$trait[paste0(BV$ENV,":",BV$GID)]                                    # GE-minor
+    BV$E = mod$U$`u:ENV`$trait[BV$ENV]                                                               # E
+    BV$pre = BV$mu + BV$A_l + BV$A_s + BV$AE_l + BV$AE_s + BV$E
 
   } else { # If only one AE kinship matrices is inputted
     mod = mmer(reformulate(fixColName, "trait"),
@@ -79,12 +81,14 @@ mmgeblup <- function(data, Ka, EKae1, EKae2)
                data = data,
                verbose = FALSE, date.warning = FALSE)
     ## Predict
-    mu = as.matrix(cbind(rep(1, nrow(data)), data[,as.vector(mod$Beta$Effect)[-1]])) %*% mod$Beta$Estimate
+    # mu = as.matrix(cbind(rep(1, nrow(data)), data[,as.vector(mod$Beta$Effect)[-1]])) %*% mod$Beta$Estimate
     BV = data.frame(data[,c("ENV","GID")])
-    BV$pre = mu +                                          # mu
-      mod$U$`u:GID`$trait[BV$GID]+                         # G
-      mod$U$`u:ENV`$trait[BV$ENV]+                         # E
-      mod$U$`u:ENV:GID`$trait[paste0(BV$ENV,":",BV$GID)]   # GE
+    BV$mu = mod$Beta$Estimate[1]                                                                     # mu
+    BV$A_l = as.matrix(data[,as.vector(mod$Beta$Effect)[-1]]) %*% as.vector(mod$Beta$Estimate)[-1]   # G-major
+    BV$A_s = mod$U$`u:GID`$trait[BV$GID]                                                             # G-minor
+    BV$AE = mod$U$`u:ENV:GID`$trait[paste0(BV$ENV,":",BV$GID)]                                       # GE
+    BV$E = mod$U$`u:ENV`$trait[BV$ENV]                                                               # E
+    BV$pre = BV$mu + BV$A_l + BV$A_s + BV$AE + BV$E
   }
 
   return(list(mod, BV))

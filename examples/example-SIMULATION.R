@@ -10,12 +10,13 @@ library(mmGEBLUP)
 
 #### Data simulation -----------------------------------------------------------
 # Parameter setting
+set.seed(215)
 envNum = 3
 indNum = 100
 snpNum = 200
 rho_a = 0.5
 rho_ae = 0.5
-h2_a = 0.3
+h2_a = 0.6
 h2_ae = 0.3
 sigma_a = h2_a
 sigma_ae = h2_ae
@@ -40,6 +41,7 @@ eff_list = snp.effect(snpNum = snpNum, envNum = envNum,
                       variance_a_major = sigma_a_major , variance_a_minor = sigma_a_minor,
                       variance_ae_major = sigma_ae_major, variance_ae_minor = sigma_ae_minor)
 b = eff_list$effects
+
 # Plot phenotypes
 p = snp.effect.plot(effects = b)
 
@@ -49,6 +51,5 @@ geno_data = geno.generate(indNum = indNum, snpNum = snpNum, maf.min = 0.05, maf.
 # Phenotype generation
 pheno_data = pheno.generate(genotypes = t(geno_data[-c(1:3)]), effects = b,
                             envNum = envNum, indNum = indNum, sigma.error = sigma_error)
-
 
 save(geno_data, pheno_data, file = "./inst/Pivot-genphe.Rdata")
