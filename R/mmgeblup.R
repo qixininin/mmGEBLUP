@@ -32,6 +32,30 @@ mmgeblup <- function(data, Ka, EKae1, EKae2)
   ## Data prepare
   datafake = data %>% dplyr::mutate(GID1 = GID)
 
+  ## TEST --------
+
+  site_qe = unique(qtl_env_data$QTL)
+  Xae = mmgeno_data[, colnames(mmgeno_data) %in% site_qe]
+  EKae = apply(Xae, 2, simplify = F,  function(x)  {
+    A = tcrossprod(x)
+    colnames(A) = rownames(A) = names(x)
+    kronecker(A, E, make.dimnames = T) } )
+
+  datafake = data %>%
+    dplyr::mutate(GID1 = GID) %>%
+    dplyr::mutate(GID2 = GID) %>%
+    dplyr::mutate(GID3 = GID) %>%
+    dplyr::mutate(GID4 = GID)
+
+  mod = mmer(reformulate(fixColName, "trait"),
+             random = ~vsr(GID, Gu=Ka) + vsr(ENV) +
+               vsr(GID1:ENV, Gu=EKae[[1]]) + vsr(GID1:ENV, Gu=EKae[[2]]) + vsr(GID1:ENV, Gu=EKae[[3]]) + vsr(GID1:ENV, Gu=EKae[[4]]) +
+               vsr(ENV:GID, Gu=EKae2),
+             rcov = ~units,
+             data = datafake,
+             verbose = FALSE, date.warning = FALSE)
+  ## END TEST ---------
+
   ## Perform sommer models
   if(majorGE){ # If two AE kinship matrices are inputted
     mod = mmer(reformulate(fixColName, "trait"),
