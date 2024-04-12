@@ -10,9 +10,9 @@ library(mmGEBLUP)
 library(dplyr)
 
 # Prepare QTXNetwork ------------------------------------------------------------------
-load("./inst/Pivot-genphe.Rdata")
-pheno_output_prefix = "./inst/Pivot"
-geno_output_prefix  = "./inst/Pivot"
+load("./inst/Simulation-genphe.Rdata")
+pheno_output_prefix = "./inst/Simulation"
+geno_output_prefix  = "./inst/Simulation"
 
 ## The default output names are
 ## .gen = Simulation.gen
@@ -24,9 +24,9 @@ qtxnetwork.input.trans(geno_data, pheno_data,
 
 # Perform QTXNetwork -----------------------------------------------------------
 qtxnetwork_path = "/public3/zqx/QTXNetwork_4.0/build/QTXNetwork"
-gen_file = "./inst/Pivot.gen"
-phe_file = "./inst/Pivot_SimTrait.phe"
-pre_file = "./inst/Pivot_SimTrait.pre"
+gen_file = "./inst/Simulation.gen"
+phe_file = "./inst/Simulation_SimTrait.phe"
+pre_file = "./inst/Simulation_SimTrait.pre"
 
 qtxnetwork.perform(qtxnetwork_path, gen_file, phe_file, pre_file)
 
@@ -35,4 +35,4 @@ qtl = qtxnetwork.output.trans(pheno_data, pre_file)
 qtl_data = qtl$qtl_data
 qtl_env_data = qtl$qtl_env_data
 
-save(qtl_data, qtl_env_data, file = "./inst/Pivot-qtl.Rdata")
+save(qtl_data, qtl_env_data, file = "./inst/Simulation-qtl.Rdata")

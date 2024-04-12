@@ -4,16 +4,16 @@
 \alias{mmgeblup}
 \title{mmgeblup function}
 \usage{
-mmgeblup(data, Ka, EKae1, EKae2)
+mmgeblup(data, Ka, KaeE1, KaeE2)
 }
 \arguments{
 \item{data}{a data frame}
 
 \item{Ka}{additive genetic relationship matrix}
 
-\item{EKae1}{additive-by-environment relationship matrix1}
+\item{KaeE1}{additive-by-environment relationship matrix1}
 
-\item{EKae2}{additive-by-environment relationship matrix2}
+\item{KaeE2}{additive-by-environment relationship matrix2}
 }
 \value{
 list(mod, BV)
@@ -22,5 +22,5 @@ list(mod, BV)
 mmgeblup function
 }
 \examples{
-\dontrun{rst = mmgeblup(data = cbind(dt, mmdata$Xa), Ka = mmdata$Ka, EKae1 = mmdata$EKae1, EKae2 = mmdata$EKae2)}
+\dontrun{rst = mmgeblup(data = cbind(dt, mmdata$Xa), Ka = mmdata$Ka, KaeE1 = mmdata$KaeE1, KaeE2 = mmdata$KaeE2)}
 }

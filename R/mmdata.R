@@ -78,20 +78,19 @@ mmdata <- function(geno_data, pheno_data, qtl_data, qtl_env_data)
   colnames(A) = rownames(A) = rownames(mmgeno_data)
   E = diag(trialNum)
   rownames(E) = colnames(E) = trialName
-  EA = kronecker(E, A, make.dimnames = TRUE)
 
   # Calculate reduced additive relationship matrix
   KaXa = calculateKaXa(mmgeno_data, mmpheno_data, A, site_qtl, m_qtl)
 
   # Calculate two additive-by-environment matrices
-  EKae = calculateEKae(mmgeno_data, A, E, EA, site_env_qtl_all, m_env_qtl)
+  KaeE = calculateEKae(mmgeno_data, A, E, site_env_qtl_all, m_env_qtl)
 
   return(list(mmgeno_data = mmgeno_data,
               mmpheno_data = mmpheno_data,
               Ka = KaXa$Ka,
               Xa = KaXa$Xa,
-              EKae1 = EKae$EKae1,
-              EKae2 = EKae$EKae2,
+              KaeE1 = KaeE$KaeE1,
+              KaeE2 = KaeE$KaeE2,
               mmsummary = list(traitName = traitName,
                                trialName = trialName,
                                lineName  = lineName)))

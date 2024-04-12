@@ -4,7 +4,7 @@
 \alias{calculateEKae}
 \title{calculateEKae function}
 \usage{
-calculateEKae(geno_data, A, E, EA, site_env_qtl_all, m_env_qtl)
+calculateEKae(geno_data, A, E, site_env_qtl_all, m_env_qtl)
 }
 \arguments{
 \item{geno_data}{genotype data}
@@ -13,18 +13,16 @@ calculateEKae(geno_data, A, E, EA, site_env_qtl_all, m_env_qtl)
 
 \item{E}{environment variance-covariance matrix}
 
-\item{EA}{additive-by-environment relationship matrix}
-
 \item{site_env_qtl_all}{a dataframe with all AE QTL}
 
 \item{m_env_qtl}{the number of AE QTL}
 }
 \value{
-a list of EKae1 and EKae2
+a list of KaeE1 and KaeE2
 }
 \description{
 calculateEKae function
 }
 \examples{
-\dontrun{EKae = calculateEKae(geno_data = mmgeno_data, A, E, EA, site_env_qtl_all, m_env_qtl)}
+\dontrun{EKae = calculateEKae(geno_data = mmgeno_data, A, E, site_env_qtl_all, m_env_qtl)}
 }
