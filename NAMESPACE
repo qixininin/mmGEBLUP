@@ -2,9 +2,11 @@
 
 export(calculateEKae)
 export(calculateKaXa)
+export(gblup)
 export(geblup)
 export(geno.generate)
 export(mmdata)
+export(mmgblup)
 export(mmgeblup)
 export(pheno.generate)
 export(qtxnetwork.input.trans)

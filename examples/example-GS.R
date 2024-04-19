@@ -4,8 +4,8 @@ library(dplyr)
 set.seed(215)
 
 # Load data --------------------------------------------------------------------
-load("./inst/Pivot-genphe.Rdata")
-load("./inst/Pivot-qtl.Rdata")
+load("./inst/Simulation-genphe.Rdata")
+load("./inst/Simulation-qtl.Rdata")
 
 # geno_data[1:5,1:10]
 # pheno_data[1:5,]
@@ -64,12 +64,11 @@ for(i in 1:cvNum) # loop for cross validation fold
 rstmmGEBLUP <- dplyr::bind_rows(mmgeblup_list)
 rstBV <- dplyr::bind_rows(mmgeblup_bv_list)
 
-save(mmdata, rstmmGEBLUP, rstBV, cvSet, file = "./inst/Simulation-GSresult.Rdata")
+# save(mmdata, rstmmGEBLUP, rstBV, cvSet, file = "./inst/Simulation-GSresult.Rdata")
 
 # GEBLUP ------------------------------------------------------
 a <- 0
 geblup_list <- list()
-geblup_bv_list <- list()
 for(i in 1:cvNum) # loop for cross validation fold
 {
   a <- a + 1
@@ -96,3 +95,67 @@ for(i in 1:cvNum) # loop for cross validation fold
 }
 
 rstGEBLUP <- dplyr::bind_rows(geblup_list)
+
+# mmGBLUP ------------------------------------------------------
+a <- 0
+mmgblup_list <- list()
+for(i in 1:cvNum) # loop for cross validation fold
+{
+  a <- a + 1
+
+  # set phenotype in validation set and in validation env to be NA
+  cv = as.vector(na.omit(unique(cvSet[i,])))
+  dt = mmpheno_data %>% dplyr::mutate(trait = ifelse(GID %in% cv & ENV %in% validEnv, NA, trait))
+  dt = as.data.frame(dt)
+
+  # mmGBLUP model
+  rst = mmgblup(data = cbind(dt, mmdata$Xa), Ka = mmdata$Ka)
+  BV = rst[[2]]
+
+  # Calculate correlation
+  cor <- BV %>% dplyr::mutate(obs = mmpheno_data$trait) %>%
+    dplyr::filter(GID %in% cv) %>%
+    dplyr::filter(ENV %in% validEnv) %>%
+    dplyr::summarise(cor(obs,pre,use="pairwise.complete.obs")) %>%
+    as.numeric()
+
+  mmgblup_list[[a]] = data.frame(TRAIT = mmdata$mmsummary$traitName, CV = i, COR = cor, R2 = cor^2)
+  print(a)
+}
+
+rstmmGBLUP <- dplyr::bind_rows(mmgblup_list)
+
+# GBLUP ------------------------------------------------------
+a <- 0
+gblup_list <- list()
+for(i in 1:cvNum) # loop for cross validation fold
+{
+  a <- a + 1
+
+  # set phenotype in validation set and in validation env to be NA
+  cv = as.vector(na.omit(unique(cvSet[i,])))
+  dt = mmpheno_data %>% dplyr::mutate(trait = ifelse(GID %in% cv & ENV %in% validEnv, NA, trait))
+  dt = as.data.frame(dt)
+
+  # GBLUP model
+  rst = gblup(data = dt, A = mmdata$A)
+  BV = rst[[2]]
+
+  # Calculate correlation
+  cor <- BV %>% dplyr::mutate(obs = mmpheno_data$trait) %>%
+    dplyr::filter(GID %in% cv) %>%
+    dplyr::filter(ENV %in% validEnv) %>%
+    dplyr::summarise(cor(obs,pre,use="pairwise.complete.obs")) %>%
+    as.numeric()
+
+  gblup_list[[a]] = data.frame(TRAIT = mmdata$mmsummary$traitName, CV = i, COR = cor, R2 = cor^2)
+
+  print(a)
+}
+
+rstGBLUP <- dplyr::bind_rows(gblup_list)
+
+rst = data.frame(rbind(rstGBLUP, rstGEBLUP, rstmmGBLUP, rstmmGEBLUP),
+           MODEL = rep(c("GBLUP","GEBLUP","mmGBLUP","mmGEBLUP"), each = cvNum))
+
+save(rst, file = "./inst/Simulation-GSresult-vs.Rdata")
