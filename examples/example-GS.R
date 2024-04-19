@@ -109,7 +109,7 @@ for(i in 1:cvNum) # loop for cross validation fold
   dt = as.data.frame(dt)
 
   # mmGBLUP model
-  rst = mmgblup(data = cbind(dt, mmdata$Xa), Ka = mmdata$Ka)
+  rst = mmgblup(data = cbind(dt, mmdata$Xa), Ka = mmdata$Ka, AE = mmdata$AE)
   BV = rst[[2]]
 
   # Calculate correlation
@@ -158,4 +158,4 @@ rstGBLUP <- dplyr::bind_rows(gblup_list)
 rst = data.frame(rbind(rstGBLUP, rstGEBLUP, rstmmGBLUP, rstmmGEBLUP),
            MODEL = rep(c("GBLUP","GEBLUP","mmGBLUP","mmGEBLUP"), each = cvNum))
 
-save(rst, file = "./inst/Simulation-GSresult-vs.Rdata")
+save(rst, file = "./inst/Simulation-GSresult-cor.Rdata")

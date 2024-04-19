@@ -4,12 +4,14 @@
 \alias{mmgblup}
 \title{mmgblup function}
 \usage{
-mmgblup(data, Ka)
+mmgblup(data, Ka, AE)
 }
 \arguments{
 \item{data}{a data frame}
 
 \item{Ka}{additive genetic relationship matrix}
+
+\item{AE}{additive-by-environment relationship matrix1}
 }
 \value{
 list(mod, BV)
@@ -18,5 +20,5 @@ list(mod, BV)
 mmgblup function
 }
 \examples{
-\dontrun{rst = mmgblup(data = cbind(dt, mmdata$Xa), Ka = mmdata$Ka)}
+\dontrun{rst = mmgblup(data = cbind(dt, mmdata$Xa), Ka = mmdata$Ka, AE = mmdata$AE)}
 }
