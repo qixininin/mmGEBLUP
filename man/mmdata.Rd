@@ -20,10 +20,12 @@ mmdata(geno_data, pheno_data, qtl_data, qtl_env_data)
 a list with QCed genotype and phenotype data, and other data required for GS analysis
         $ mmgeno_data an n*m matrix
         $ mmpheno_data an n_obs*3 data frame
-        $ Ka additive relationship matrix
-        $ Xa additive fixed effect coefficient
-        $ EKae1 additive-by-environment relationship matrix 1
-        $ EKae2 additive-by-environment relationship matrix 2
+        $ Ka additive relationship matrix for mmGEBLUP
+        $ Xa additive fixed effect coefficient for mmGEBLUP
+        $ EKae1 additive-by-environment relationship matrix 1 for mmGEBLUP
+        $ EKae2 additive-by-environment relationship matrix 2 for mmGEBLUP
+        $ A additive relationship matrix for GEBLUP
+        $ AE additive-by-environment relationship matrix for GEBLUP
         $ mmsummary data summary
 }
 \description{

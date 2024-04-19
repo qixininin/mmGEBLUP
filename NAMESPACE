@@ -2,6 +2,7 @@
 
 export(calculateEKae)
 export(calculateKaXa)
+export(geblup)
 export(geno.generate)
 export(mmdata)
 export(mmgeblup)

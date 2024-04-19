@@ -9,10 +9,12 @@
 #' @return a list with QCed genotype and phenotype data, and other data required for GS analysis
 #'         $ mmgeno_data an n*m matrix
 #'         $ mmpheno_data an n_obs*3 data frame
-#'         $ Ka additive relationship matrix
-#'         $ Xa additive fixed effect coefficient
-#'         $ EKae1 additive-by-environment relationship matrix 1
-#'         $ EKae2 additive-by-environment relationship matrix 2
+#'         $ Ka additive relationship matrix for mmGEBLUP
+#'         $ Xa additive fixed effect coefficient for mmGEBLUP
+#'         $ EKae1 additive-by-environment relationship matrix 1 for mmGEBLUP
+#'         $ EKae2 additive-by-environment relationship matrix 2 for mmGEBLUP
+#'         $ A additive relationship matrix for GEBLUP
+#'         $ AE additive-by-environment relationship matrix for GEBLUP
 #'         $ mmsummary data summary
 #' @export
 #' @import dplyr
@@ -78,12 +80,17 @@ mmdata <- function(geno_data, pheno_data, qtl_data, qtl_env_data)
   colnames(A) = rownames(A) = rownames(mmgeno_data)
   E = diag(trialNum)
   rownames(E) = colnames(E) = trialName
+  AE = kronecker(A, E, make.dimnames = TRUE)
 
   # Calculate reduced additive relationship matrix
   KaXa = calculateKaXa(mmgeno_data, mmpheno_data, A, site_qtl, m_qtl)
 
   # Calculate two additive-by-environment matrices
-  KaeE = calculateEKae(mmgeno_data, A, E, site_env_qtl_all, m_env_qtl)
+  if(m_env_qtl>0){
+    KaeE = calculateEKae(mmgeno_data, E, site_env_qtl_all)
+  } else {
+    KaeE = list(KaeE1 = AE, KaeE2 = NULL)
+  }
 
   return(list(mmgeno_data = mmgeno_data,
               mmpheno_data = mmpheno_data,
@@ -91,6 +98,8 @@ mmdata <- function(geno_data, pheno_data, qtl_data, qtl_env_data)
               Xa = KaXa$Xa,
               KaeE1 = KaeE$KaeE1,
               KaeE2 = KaeE$KaeE2,
+              A = A,
+              AE = AE,
               mmsummary = list(traitName = traitName,
                                trialName = trialName,
                                lineName  = lineName)))
