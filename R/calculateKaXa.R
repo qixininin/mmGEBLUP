@@ -17,7 +17,7 @@ calculateKaXa <- function(geno_data, pheno_data, A, site_qtl, m_qtl)
   if(m_qtl>0)
   {
     Ka = A.mat(as.matrix(geno_data[,!colnames(geno_data) %in% site_qtl]))
-    Xa = geno_data[pheno_data$GID, site_qtl]
+    Xa = geno_data[as.character(pheno_data$GID), site_qtl]
   } else {
     Ka = A
     Xa = c()

@@ -3,7 +3,7 @@
 library(devtools)
 install_github("qixininin/mmGEBLUP")
 ## Install from source files
-install.packages("/public3/zqx/mmGEBLUP_0.1.0.tar.gz", repos = NULL, type = "source")
+install.packages("/public3/zqx/gs/mmGEBLUP_0.1.0.tar.gz", repos = NULL, type = "source")
 
 #### Load package --------------------------------------------------------------
 library(mmGEBLUP)
