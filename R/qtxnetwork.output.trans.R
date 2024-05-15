@@ -69,8 +69,8 @@ qtxnetwork.output.trans <- function(pheno_data, pre_file)
     dplyr::rename(QTL = SNPID) %>%
     dplyr::arrange(factor(TRAIT, levels = traitName))
 
-  rownames(qtl_data) = 1:nrow(qtl_data)
-  rownames(qtl_env_data) = 1:nrow(qtl_env_data)
+  if(nrow(qtl_data)>0) rownames(qtl_data) = 1:nrow(qtl_data)
+  if(nrow(qtl_env_data)>0) rownames(qtl_env_data) = 1:nrow(qtl_env_data)
 
   return(list(qtl_data = qtl_data, qtl_env_data = qtl_env_data))
 }
