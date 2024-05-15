@@ -18,7 +18,7 @@ mmgeblup <- function(data, Ka, KaeE1, KaeE2)
     stop("Error: no input for additive kinship matrix or additive-by-environment kinship matrix.")
   }
   majorGE = TRUE
-  if(missing(KaeE2)){
+  if(is.null(KaeE2)){
     majorGE = FALSE
   }
 
