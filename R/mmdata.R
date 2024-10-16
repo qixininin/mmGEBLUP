@@ -38,6 +38,8 @@ mmdata <- function(geno_data, pheno_data, qtl_data, qtl_env_data)
   mmgeno_data = as.matrix(mmgeno_data[lineName, ])
 
   # Prepare phenotype
+  pheno_data$ENV = as.factor(pheno_data$ENV)
+  pheno_data$GID = as.factor(pheno_data$GID)
   mmpheno_data = pheno_data %>%
     dplyr::filter(GID %in% lineName) %>%
     droplevels()

@@ -21,6 +21,13 @@ calculateEKae <- function(geno_data, E, site_env_qtl_all)
   ## Variance-covariance matrix in terms of large AE effects (a list)
   # genotypes for large AE loci
   Xae = as.matrix(geno_data[, colnames(geno_data) %in% site_qe])
+  # imputation with mean (- 2024/10/17)
+  Xae = apply(Xae, 2, function(x) {
+    if(any(is.na(x))){
+      x[which(is.na(x))] = mean(x, na.rm = T)
+    }
+    return(x)
+    })
   KaeE_l = list()
   for(t in 1:length(site_qe))
   {
