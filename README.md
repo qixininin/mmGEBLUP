@@ -84,7 +84,7 @@ save(geno_data, pheno_data, file = "./inst/Simulation-genphe.Rdata")
 
 
 ## Example 2 GWAS analysis
-This example file is to perform QTS analysis using QTXNetwork [https://github.com/Zhutn/QTXNetwork_4.0] based on genotype and phenotype data  
+This example file is to perform QTS analysis using QTXNetwork [https://github.com/Zhutn/QTXNetwork_3.0] based on genotype and phenotype data  
 1. If you have already obtained QTS results, you can skip this example.  
 2. If you have generated the simulation data by following the 'example-SIMULATION.R', you can load 'Simulation-genphe.Rdata' directly.  
 3. If you want to input your own data for 'QTXnetwork' from R, this example can also help you perpare QTXnetwork-formated files (.gen/.phe)  
