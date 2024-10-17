@@ -45,6 +45,10 @@ qtxnetwork.output.trans <- function(pheno_data, pre_file)
       df.qtl = rbind(df.qtl, data.frame(trait, tmp))
     }
   }
+
+  if(nrow(df.qtl)==0) {return(list(qtl_data = data.frame(TRAIT=character(), QTL=character()),
+                                   qtl_env_data = data.frame(TRAIT=character(), ENV=character(), QTL=character())))}
+
   colnames(df.qtl) = c("TRAIT", "QTL", "SNPID", "A", "SE", "P-Value",
                        as.vector(rbind(paste0(envName),paste0("SE", 1:envNum),paste0("Pvalue", 1:envNum))))
 
