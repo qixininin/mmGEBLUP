@@ -26,9 +26,13 @@
 snp.effect <- function(snpNum, envNum, major_a_idx, major_ae_idx,
                        variance_a_major, variance_ae_major,
                        variance_a_minor, variance_ae_minor) {
+  no_a_idx = ifelse(is.na(major_a_idx), T, F)
+  no_ae_idx = ifelse(is.na(major_ae_idx), T, F)
 
-  if(max(major_a_idx)>snpNum | max(major_ae_idx)>snpNum) {
-    stop("Error: snp.effect(). The input major_a_idx or major_ae_idx is out of the snpNum range.")
+  if(!no_a_idx & !no_ae_idx){
+    if(max(major_a_idx)>snpNum | max(major_ae_idx)>snpNum) {
+      stop("Error: snp.effect(). The input major_a_idx or major_ae_idx is out of the snpNum range.")
+    }
   }
 
   # determine minor index
@@ -40,14 +44,16 @@ snp.effect <- function(snpNum, envNum, major_a_idx, major_ae_idx,
   interact_effects <- matrix(0, nrow = envNum, ncol = snpNum)
 
   # Simulate main gene effect
+  if(!no_a_idx){
+    main_effects[1,major_a_idx] <- rnorm(length(major_a_idx), mean = 0, sd = sqrt(variance_a_major))
+    main_effects[1,minor_a_idx] <- rnorm(length(minor_a_idx), mean = 0, sd = sqrt(variance_a_minor))
+  }
 
-  main_effects[1,major_a_idx] <- rnorm(length(major_a_idx), mean = 0, sd = sqrt(variance_a_major))
-  main_effects[1,minor_a_idx] <- rnorm(length(minor_a_idx), mean = 0, sd = sqrt(variance_a_minor))
-
-
-  for (i in 1:envNum) {
-    interact_effects[i,major_ae_idx] <- rnorm(length(major_ae_idx), mean = 0, sd = sqrt(variance_ae_major))
-    interact_effects[i,minor_ae_idx] <- rnorm(length(minor_ae_idx), mean = 0, sd = sqrt(variance_ae_minor))
+  if(!no_ae_idx){
+    for (i in 1:envNum) {
+      interact_effects[i,major_ae_idx] <- rnorm(length(major_ae_idx), mean = 0, sd = sqrt(variance_ae_major))
+      interact_effects[i,minor_ae_idx] <- rnorm(length(minor_ae_idx), mean = 0, sd = sqrt(variance_ae_minor))
+    }
   }
 
   effects = main_effects[rep(1,envNum),] + interact_effects
