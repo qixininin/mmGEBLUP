@@ -193,3 +193,9 @@ print("NOTE: mmGEBLUP DONE")
 
 save(rstmmGEBLUP, file = "./inst/Simulation-GSresult.Rdata")
 ```
+
+## Contact
+Please contact Qixin Zhang (zhangqx@zju.edu.cn) for queries.
+
+## Reference
+Zhang, Q.-X., Zhu, T., Lin, F., Fang, D., Chen, X., Lou, X., Tong, Z., Xiao, B., Xu, H.-M., 2025. mmGEBLUP: an advanced genomic prediction scheme for genetic improvement of complex traits in crops through integrative analysis of major genes, polygenes, and genotype–environment interactions. Briefings in Bioinformatics 26, bbaf058. https://doi.org/10.1093/bib/bbaf058.
